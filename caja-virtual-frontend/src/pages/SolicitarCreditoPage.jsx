@@ -187,50 +187,52 @@ export default function SolicitarCreditoPage() {
           </form>
         </Card>
 
-        {/* Simulador de cuota en tiempo real */}
-        <Card className="p-6 bg-navy-900 text-white border-none lg:sticky lg:top-6">
-          <h2 className="font-bold flex items-center gap-2 mb-1">
-            <Calculator size={18} className="text-accent-500" /> Simulador de cuota
+                {/* Simulador de cuota en tiempo real */}
+        <Card className="p-6 bg-white border border-gray-200 shadow-sm lg:sticky lg:top-6">
+          <h2 className="font-bold flex items-center gap-2 mb-1 text-gray-900">
+            <Calculator size={18} className="text-gray-900" /> Simulador de cuota
           </h2>
-          <p className="text-xs text-white/50 mb-5">
+          <p className="text-xs text-gray-500 mb-5">
             Estimado referencial según el producto, monto y plazo seleccionados.
           </p>
 
           {!simulacion ? (
             <div className="py-10 text-center">
-              <p className="text-white/50 text-sm">
+              <p className="text-gray-500 text-sm">
                 Selecciona un producto e ingresa un monto para ver tu cuota estimada.
               </p>
             </div>
           ) : (
             <div className="space-y-5">
               <div>
-                <p className="text-white/50 text-xs">Cuota mensual estimada</p>
-                <p className="text-4xl font-extrabold text-accent-500 mt-1">
+                <p className="text-gray-500 text-xs uppercase tracking-wide">Cuota mensual estimada</p>
+                <p className="text-4xl font-extrabold text-black mt-1">
                   {formatMoney(simulacion.cuota)}
                 </p>
               </div>
-              <div className="grid grid-cols-2 gap-4 pt-4 border-t border-white/10">
+
+              <div className="grid grid-cols-2 gap-4 pt-4 border-t border-gray-200">
                 <div>
-                  <p className="text-white/50 text-xs">Total a pagar</p>
-                  <p className="font-bold mt-0.5">{formatMoney(simulacion.totalPagar)}</p>
+                  <p className="text-gray-500 text-xs">Total a pagar</p>
+                  <p className="font-bold text-gray-900 mt-0.5">{formatMoney(simulacion.totalPagar)}</p>
                 </div>
                 <div>
-                  <p className="text-white/50 text-xs">Intereses estimados</p>
-                  <p className="font-bold mt-0.5">{formatMoney(simulacion.intereses)}</p>
+                  <p className="text-gray-500 text-xs">Intereses estimados</p>
+                  <p className="font-bold text-gray-900 mt-0.5">{formatMoney(simulacion.intereses)}</p>
                 </div>
                 <div>
-                  <p className="text-white/50 text-xs">TEA referencial</p>
-                  <p className="font-bold mt-0.5">
+                  <p className="text-gray-500 text-xs">TEA referencial</p>
+                  <p className="font-bold text-gray-900 mt-0.5">
                     {(TASA_REFERENCIAL[producto] * 100).toFixed(0)}%
                   </p>
                 </div>
                 <div>
-                  <p className="text-white/50 text-xs">Plazo</p>
-                  <p className="font-bold mt-0.5">{plazo} meses</p>
+                  <p className="text-gray-500 text-xs">Plazo</p>
+                  <p className="font-bold text-gray-900 mt-0.5">{plazo} meses</p>
                 </div>
               </div>
-              <p className="text-[11px] text-white/40 leading-relaxed pt-2 border-t border-white/10">
+
+              <p className="text-[11px] text-gray-400 leading-relaxed pt-2 border-t border-gray-100">
                 Este simulador es referencial y no constituye una oferta vinculante. La tasa y
                 cuota final dependerán de la evaluación crediticia que realice Caja Paita.
               </p>
