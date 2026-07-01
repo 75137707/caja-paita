@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider } from "./context/AuthContext";
 import { AdminAuthProvider } from "./context/AdminAuthContext";
 import ProtectedRoute from "./components/ProtectedRoute";
@@ -40,9 +40,11 @@ function ProtectedAdmin({ children }) {
   );
 }
 
-// "/" SIEMPRE muestra la landing pública, sin importar si hay sesión.
+// "/" muestra la landing pública en modo Homebanking, o redirige a /admin/login
+// en modo CORE (controlado por la variable de entorno VITE_APP_MODE).
 // El dashboard vive en "/dashboard" (ruta protegida separada).
 // Así el flujo es: landing → login → dashboard, igual que un banco real.
+const isCoreMode = import.meta.env.VITE_APP_MODE === "core";
 
 export default function App() {
   return (
@@ -51,7 +53,7 @@ export default function App() {
         <BrowserRouter>
           <Routes>
             {/* Rutas públicas */}
-            <Route path="/" element={<LandingPage />} />
+            <Route path="/" element={isCoreMode ? <Navigate to="/admin/login" replace /> : <LandingPage />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/registro" element={<RegisterPage />} />
             <Route path="/apertura" element={<AperturaPage />} />
