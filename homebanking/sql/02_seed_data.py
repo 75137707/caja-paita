@@ -12,11 +12,31 @@ from datetime import date, timedelta
 
 random.seed(42)
 
-DB_HOST = "127.0.0.1"
-DB_PORT = 3306
-DB_USER = "root"
-DB_PASSWORD = "123456"
-DB_NAME = "bd_core_financiero"
+# ---------------------------------------------------------------------------
+# Conexion: se toma de la variable de entorno DATABASE_URL (la misma que usa
+# el backend en Render/Vercel). Si no existe, cae a localhost para uso local.
+# Formato esperado: mysql+pymysql://usuario:password@host:puerto/nombre_bd
+# ---------------------------------------------------------------------------
+import os
+from urllib.parse import urlparse, unquote
+
+_env_url = os.environ.get("DATABASE_URL")
+
+if _env_url:
+    _parsed = urlparse(_env_url.replace("mysql+pymysql://", "mysql://"))
+    DB_HOST = _parsed.hostname
+    DB_PORT = _parsed.port or 3306
+    DB_USER = unquote(_parsed.username or "")
+    DB_PASSWORD = unquote(_parsed.password or "")
+    DB_NAME = _parsed.path.lstrip("/").split("?")[0]
+else:
+    DB_HOST = "127.0.0.1"
+    DB_PORT = 3306
+    DB_USER = "root"
+    DB_PASSWORD = "123456"
+    DB_NAME = "bd_core_financiero"
+
+print(f"Conectando a: {DB_USER}@{DB_HOST}:{DB_PORT}/{DB_NAME}")
 
 # ---------------------------------------------------------------------------
 # Parámetros de volumen (según especificación)
@@ -35,8 +55,12 @@ APELLIDOS = ["Garcia", "Rodriguez", "Martinez", "Lopez", "Gonzalez", "Perez", "S
              "Chavez", "Mendoza", "Ruiz", "Romero", "Aguilar", "Silva", "Torres", "Herrera",
              "Medina", "Cruz", "Nunez", "Ramos", "Rojas", "Paredes", "Salazar"]
 
+_CA_PATH = os.path.join(os.path.dirname(__file__), "..", "app", "core", "certs", "ca.pem")
+_ssl_args = {"ssl": {"ca": _CA_PATH}} if (DB_HOST != "127.0.0.1" and os.path.exists(_CA_PATH)) else {}
+
 conn = pymysql.connect(host=DB_HOST, port=DB_PORT, user=DB_USER, password=DB_PASSWORD,
-                        database=DB_NAME, charset="utf8mb4", autocommit=False)
+                        database=DB_NAME, charset="utf8mb4", autocommit=False,
+                        **_ssl_args)
 cur = conn.cursor()
 
 
